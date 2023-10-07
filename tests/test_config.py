@@ -2,7 +2,8 @@ import pytest, os, jwt
 from fastapi_jwt_auth import AuthJWT
 from fastapi import FastAPI, Depends
 from fastapi.testclient import TestClient
-from pydantic import BaseSettings, ValidationError
+from pydantic import ValidationError
+from pydantic_settings import BaseSettings
 from typing import Sequence, Optional
 from datetime import timedelta
 
@@ -170,7 +171,7 @@ def test_load_env_from_outside():
     def get_valid_settings():
         return Settings()
 
-    assert AuthJWT._token_location == ['cookies']
+    assert AuthJWT._token_location == {'cookies'}
     assert AuthJWT._secret_key == "testing"
     assert AuthJWT._public_key == PUBLIC_KEY
     assert AuthJWT._private_key == PRIVATE_KEY
@@ -180,7 +181,7 @@ def test_load_env_from_outside():
     assert AuthJWT._encode_issuer == "urn:foo"
     assert AuthJWT._decode_issuer == "urn:foo"
     assert AuthJWT._decode_audience == 'urn:foo'
-    assert AuthJWT._denylist_token_checks == ['refresh']
+    assert AuthJWT._denylist_token_checks == {'refresh'}
     assert AuthJWT._denylist_enabled is False
     assert AuthJWT._header_name == "Auth-Token"
     assert AuthJWT._header_type is None

@@ -115,7 +115,7 @@ def test_warning_if_cookies_not_in_token_location(url,client):
 def test_set_cookie_not_valid_type_max_age(Authorize):
     @AuthJWT.load_config
     def get_cookie_location():
-        return [("authjwt_token_location",{'cookies'}),("authjwt_secret_key","secret")]
+        return [("authjwt_token_location",{"cookies"}),("authjwt_secret_key","secret")]
 
     token = Authorize.create_access_token(subject=1)
 
@@ -128,7 +128,7 @@ def test_set_cookie_not_valid_type_max_age(Authorize):
 def test_set_unset_cookies_not_valid_type_response(Authorize):
     @AuthJWT.load_config
     def get_cookie_location():
-        return [("authjwt_token_location",{'cookies'}),("authjwt_secret_key","secret")]
+        return [("authjwt_token_location",{"cookies"}),("authjwt_secret_key","secret")]
 
     token = Authorize.create_access_token(subject=1)
 
@@ -152,7 +152,7 @@ def test_set_cookie_csrf_protect_false(url,client):
     @AuthJWT.load_config
     def get_cookie_location():
         return [
-            ("authjwt_token_location",{'cookies'}),
+            ("authjwt_token_location",{"cookies"}),
             ("authjwt_secret_key","secret"),
             ("authjwt_cookie_csrf_protect",False)
         ]
@@ -165,7 +165,7 @@ def test_set_cookie_csrf_protect_false(url,client):
 def test_set_cookie_csrf_protect_true(url,client):
     @AuthJWT.load_config
     def get_cookie_location():
-        return [("authjwt_token_location",{'cookies'}),("authjwt_secret_key","secret")]
+        return [("authjwt_token_location",{"cookies"}),("authjwt_secret_key","secret")]
 
     cookie_key = url.split("-")[0][1:]
     response = client.get(url)
@@ -174,7 +174,7 @@ def test_set_cookie_csrf_protect_true(url,client):
 def test_unset_all_cookie(client):
     @AuthJWT.load_config
     def get_cookie_location():
-        return [("authjwt_token_location",{'cookies'}),("authjwt_secret_key","secret")]
+        return [("authjwt_token_location",{"cookies"}),("authjwt_secret_key","secret")]
 
     response = client.get('/all-token')
     assert response.cookies.get("access_token_cookie") is not None
@@ -194,7 +194,7 @@ def test_unset_all_cookie(client):
 def test_unset_all_cookie_response(client):
     @AuthJWT.load_config
     def get_cookie_location():
-        return [("authjwt_token_location",{'cookies'}),("authjwt_secret_key","secret")]
+        return [("authjwt_token_location",{"cookies"}),("authjwt_secret_key","secret")]
 
     response = client.get('/all-token-response')
     assert response.cookies.get("access_token_cookie") is not None
@@ -215,7 +215,7 @@ def test_custom_cookie_key(client):
     @AuthJWT.load_config
     def get_cookie_location():
         return [
-            ("authjwt_token_location",{'cookies'}),
+            ("authjwt_token_location",{"cookies"}),
             ("authjwt_secret_key","secret"),
             ("authjwt_access_cookie_key","access_cookie"),
             ("authjwt_refresh_cookie_key","refresh_cookie"),
@@ -241,7 +241,7 @@ def test_custom_cookie_key(client):
 def test_cookie_optional_protected(client):
     @AuthJWT.load_config
     def get_cookie_location():
-        return [("authjwt_token_location",{'cookies'}),("authjwt_secret_key","secret")]
+        return [("authjwt_token_location",{"cookies"}),("authjwt_secret_key","secret")]
 
     url = '/jwt-optional'
     # without token
@@ -254,7 +254,7 @@ def test_cookie_optional_protected(client):
     def change_request_methods():
         return [
             ("authjwt_csrf_methods",{"GET"}),
-            ("authjwt_token_location",{'cookies'}),
+            ("authjwt_token_location",{"cookies"}),
             ("authjwt_secret_key","secret")
         ]
 
@@ -268,7 +268,7 @@ def test_cookie_optional_protected(client):
     def change_request_csrf_protect_to_false():
         return [
             ("authjwt_csrf_methods",{'POST','PUT','PATCH','DELETE'}),
-            ("authjwt_token_location",{'cookies'}),
+            ("authjwt_token_location",{"cookies"}),
             ("authjwt_secret_key","secret"),
             ("authjwt_cookie_csrf_protect",False)
         ]
@@ -282,7 +282,7 @@ def test_cookie_optional_protected(client):
     @AuthJWT.load_config
     def change_csrf_protect_to_true():
         return [
-            ("authjwt_token_location",{'cookies'}),
+            ("authjwt_token_location",{"cookies"}),
             ("authjwt_secret_key","secret"),
             ("authjwt_cookie_csrf_protect",True)
         ]
@@ -307,7 +307,7 @@ def test_cookie_optional_protected(client):
     @AuthJWT.load_config
     def change_request_csrf_protect_to_falsee():
         return [
-            ("authjwt_token_location",{'cookies'}),
+            ("authjwt_token_location",{"cookies"}),
             ("authjwt_secret_key","secret"),
             ("authjwt_cookie_csrf_protect",False)
         ]
@@ -316,7 +316,7 @@ def test_cookie_optional_protected(client):
 
     @AuthJWT.load_config
     def change_request_csrf_protect_to_truee():
-        return [("authjwt_token_location",{'cookies'}),("authjwt_secret_key","secret")]
+        return [("authjwt_token_location",{"cookies"}),("authjwt_secret_key","secret")]
 
     response = client.post(url,headers={"X-CSRF-Token":"invalid"})
     assert response.status_code == 422
@@ -326,7 +326,7 @@ def test_cookie_optional_protected(client):
     @AuthJWT.load_config
     def custom_header_name_cookie_key():
         return [
-            ("authjwt_token_location",{'cookies'}),
+            ("authjwt_token_location",{"cookies"}),
             ("authjwt_secret_key","secret"),
             ("authjwt_access_cookie_key","access_cookie"),
             ("authjwt_access_csrf_header_name","X-CSRF")
@@ -346,7 +346,7 @@ def test_cookie_protected(url,client):
     @AuthJWT.load_config
     def custom_header_name_cookie_key():
         return [
-            ("authjwt_token_location",{'cookies'}),
+            ("authjwt_token_location",{"cookies"}),
             ("authjwt_secret_key","secret"),
             ("authjwt_access_cookie_key","access_cookie"),
             ("authjwt_access_csrf_header_name","X-CSRF-Access"),
@@ -384,7 +384,7 @@ def test_cookie_protected(url,client):
     @AuthJWT.load_config
     def change_request_csrf_protect_to_false():
         return [
-            ("authjwt_token_location",{'cookies'}),
+            ("authjwt_token_location",{"cookies"}),
             ("authjwt_secret_key","secret"),
             ("authjwt_cookie_csrf_protect",False)
         ]
@@ -399,7 +399,7 @@ def test_cookie_protected(url,client):
     def change_request_methods():
         return [
             ("authjwt_csrf_methods",{"GET"}),
-            ("authjwt_token_location",{'cookies'}),
+            ("authjwt_token_location",{"cookies"}),
             ("authjwt_secret_key","secret"),
             ("authjwt_cookie_csrf_protect",True)
         ]
@@ -413,7 +413,7 @@ def test_cookie_protected(url,client):
     def change_request_methods_to_default():
         return [
             ("authjwt_csrf_methods",{'POST','PUT','PATCH','DELETE'}),
-            ("authjwt_token_location",{'cookies'}),
+            ("authjwt_token_location",{"cookies"}),
             ("authjwt_secret_key","secret"),
         ]
 

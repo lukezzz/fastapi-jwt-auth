@@ -4,12 +4,14 @@ from pydantic import (
     BaseModel,
     StrictBool,
     StrictInt,
-    StrictStr, field_validator
+    StrictStr, 
+    field_validator,
+    ConfigDict
 )
 
 
 class LoadConfig(BaseModel):
-    authjwt_token_location: Optional[Sequence[StrictStr]] = {'headers'}
+    authjwt_token_location: set = {'headers'}
     authjwt_secret_key: Optional[StrictStr] = None
     authjwt_public_key: Optional[StrictStr] = None
     authjwt_private_key: Optional[StrictStr] = None
@@ -20,7 +22,7 @@ class LoadConfig(BaseModel):
     authjwt_decode_issuer: Optional[StrictStr] = None
     authjwt_decode_audience: Optional[Union[StrictStr, Sequence[StrictStr]]] = None
     authjwt_denylist_enabled: Optional[StrictBool] = False
-    authjwt_denylist_token_checks: Optional[Sequence[StrictStr]] = {'access', 'refresh'}
+    authjwt_denylist_token_checks: set = {'access', 'refresh'}
     authjwt_header_name: Optional[StrictStr] = "Authorization"
     authjwt_header_type: Optional[StrictStr] = "Bearer"
     authjwt_access_token_expires: Optional[Union[StrictBool, StrictInt, timedelta]] = timedelta(minutes=15)
@@ -42,7 +44,7 @@ class LoadConfig(BaseModel):
     authjwt_refresh_csrf_cookie_path: Optional[StrictStr] = "/"
     authjwt_access_csrf_header_name: Optional[StrictStr] = "X-CSRF-Token"
     authjwt_refresh_csrf_header_name: Optional[StrictStr] = "X-CSRF-Token"
-    authjwt_csrf_methods: Optional[Sequence[StrictStr]] = {'POST', 'PUT', 'PATCH', 'DELETE'}
+    authjwt_csrf_methods: set = {'POST', 'PUT', 'PATCH', 'DELETE'}
 
     @field_validator('authjwt_access_token_expires')
     def validate_access_token_expires(cls, v):
@@ -72,18 +74,23 @@ class LoadConfig(BaseModel):
 
     @field_validator('authjwt_cookie_samesite')
     def validate_cookie_samesite(cls, v):
-        for item in v:
-            if item not in ['strict', 'lax', 'none']:
-                raise ValueError("The 'authjwt_cookie_samesite' must be between 'strict', 'lax', 'none'")
+        if v not in ['strict', 'lax', 'none']:
+            raise ValueError("The 'authjwt_cookie_samesite' must be between 'strict', 'lax', 'none'")
         return v
 
     @field_validator('authjwt_csrf_methods')
     def validate_csrf_methods(cls, v):
         for item in v:
-            if item.upper() not in {"GET", "HEAD", "POST", "PUT", "DELETE", "PATCH"}:
+            try:
+                item.upper()
+                if item.upper() not in {"GET", "HEAD", "POST", "PUT", "DELETE", "PATCH"}:
+                    raise ValueError("The 'authjwt_csrf_methods' must be between http request methods")
+            except AttributeError:
                 raise ValueError("The 'authjwt_csrf_methods' must be between http request methods")
-        return v.upper()
+        return [item.upper() for item in v]
 
-    class Config:
-        str_min_length = 1
-        str_strip_whitespace = True
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True,
+        str_min_length=1,
+        str_strip_whitespace=True
+        )
